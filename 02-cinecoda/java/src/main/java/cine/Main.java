@@ -1,5 +1,6 @@
 package cine;
 
+import java.time.LocalDate;
 import java.util.logging.Logger;
 
 public class Main {
@@ -17,5 +18,19 @@ public class Main {
         log.info(room1::toString);
         log.info(room2::toString);
         log.info(() -> "Salles libres : " + cinema.formatAvailableRooms());
+
+        // === 2. Films et supports ===
+        log.info("\n=== 2. Films et supports ===");
+        var dune = new Movie("Dune 3", 166);
+        var avengers = new Movie("Avengers: Doomsday", 119);
+        var rocky = new Movie("I Play Rocky", 103);
+
+        var duneDigital = new DigitalCopy(dune, LocalDate.of(2026, 10, 30));
+        var avengersDigital = new DigitalCopy(avengers, LocalDate.of(2026, 10, 14));
+        var rocky35mm = new Film35mmCopy(rocky, 49);
+
+        log.info(duneDigital::toString);
+        log.info(avengersDigital::toString);
+        log.info(rocky35mm::toString);
     }
 }
