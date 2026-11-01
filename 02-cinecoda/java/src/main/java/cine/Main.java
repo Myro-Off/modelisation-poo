@@ -1,12 +1,13 @@
 package cine;
 
 import java.time.LocalDate;
+import java.util.Locale;
 import java.util.logging.Logger;
 
 public class Main {
     private static Logger log;
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws BusinessRuleException {
         log = ConsoleLogger.create("cine.scenario");
 
         // === 1. Création du cinéma CinéCoda ===
@@ -32,5 +33,26 @@ public class Main {
         log.info(duneDigital::toString);
         log.info(avengersDigital::toString);
         log.info(rocky35mm::toString);
+
+        // === 3. Dune 3 en Salle 1 le 15/10/2026 (tarif de base 10,00 €) ===
+        var day = LocalDate.of(2026, 10, 15);
+        log.info("\n=== 3. Dune 3 en Salle 1 le 15/10/2026 (tarif de base 10,00 €) ===");
+        var screening1 = cinema.scheduleScreening(1, duneDigital, day, 10.0);
+        sellTicket(screening1, new StandardTicket());
+        sellTicket(screening1, new StandardTicket());
+        sellTicket(screening1, new StudentTicket());
+        sellTicket(screening1, new ChildTicket());
+        log.info(() -> "Places restantes : " + screening1.getRemainingSeats());
+        log.info(() -> "Taux de remplissage : " + screening1.getOccupancyRate() + " %");
+        log.info(() -> String.format(Locale.FRANCE, "Recette : %.2f €", screening1.calculateRevenue()));
+    }
+
+    private static void sellTicket(Screening screening, Ticket ticket) {
+        try {
+            double price = screening.sellTicket(ticket);
+            log.info(String.format(Locale.FRANCE, "%s vendu : %.2f €", ticket.getLabel(), price));
+        } catch (BusinessRuleException e) {
+            log.info("Vente refusée : " + e.getMessage());
+        }
     }
 }
