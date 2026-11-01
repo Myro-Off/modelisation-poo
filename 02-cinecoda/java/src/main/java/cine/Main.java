@@ -7,7 +7,7 @@ import java.util.logging.Logger;
 public class Main {
     private static Logger log;
 
-    public static void main(String[] args) throws BusinessRuleException {
+    public static void main(String[] args) {
         log = ConsoleLogger.create("cine.scenario");
 
         // === 1. Création du cinéma CinéCoda ===
@@ -80,6 +80,21 @@ public class Main {
         room2.finishCleaning();
         log.info("Nettoyage de la Salle 2 terminé");
         startScreening(screening5);
+
+        // === 8. Programmation en Salle 3 ===
+        log.info("\n=== 8. Programmation en Salle 3 ===");
+        try {
+            cinema.scheduleScreening(3, duneDigital, day, 10.0);
+        } catch (BusinessRuleException e) {
+            log.info("Programmation refusée : " + e.getMessage());
+        }
+
+        // === 9. Bilan du 15/10/2026 ===
+        log.info("\n=== 9. Bilan du 15/10/2026 ===");
+        for (Screening screening : cinema.getScreeningsOn(day)) {
+            log.info(screening::formatSummary);
+        }
+        log.info(() -> cinema.formatDailyRevenue(day));
     }
 
     private static void sellTicket(Screening screening, Ticket ticket) {
