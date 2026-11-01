@@ -91,4 +91,12 @@ public class Screening {
         filmCopy.recordProjection();
         this.finished = true;
     }
+
+    public String formatSummary() {
+        return String.format(java.util.Locale.FRANCE, "%s, Salle %d : %d billet(s), recette %.2f €",
+                getMovie().getTitle(),
+                room.getNumber(),
+                tickets.size(),
+                calculateRevenue());
+    }
 }

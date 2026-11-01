@@ -74,4 +74,8 @@ public class Cinema {
                 .mapToDouble(Screening::calculateRevenue)
                 .sum();
     }
+
+    public String formatDailyRevenue(LocalDate date) {
+        return String.format(java.util.Locale.FRANCE, "Recette du jour : %.2f €", calculateDailyRevenue(date));
+    }
 }
