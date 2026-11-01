@@ -45,6 +45,41 @@ public class Main {
         log.info(() -> "Places restantes : " + screening1.getRemainingSeats());
         log.info(() -> "Taux de remplissage : " + screening1.getOccupancyRate() + " %");
         log.info(() -> String.format(Locale.FRANCE, "Recette : %.2f €", screening1.calculateRevenue()));
+
+        // === 4. Avengers: Doomsday en Salle 1 le 15/10/2026 (tarif de base 10,00 €) ===
+        log.info("\n=== 4. Avengers: Doomsday en Salle 1 le 15/10/2026 (tarif de base 10,00 €) ===");
+        var screening2 = cinema.scheduleScreening(1, avengersDigital, day, 10.0);
+        startScreening(screening2);
+
+        // === 5. I Play Rocky en Salle 1 le 15/10/2026 (tarif de base 10,00 €) ===
+        log.info("\n=== 5. I Play Rocky en Salle 1 le 15/10/2026 (tarif de base 10,00 €) ===");
+        var screening3 = cinema.scheduleScreening(1, rocky35mm, day, 10.0);
+        startScreening(screening3);
+        log.info(() -> "État de la Salle 1 : " + room1.getState());
+
+        // === 6. I Play Rocky en Salle 2 le 15/10/2026 (tarif de base 8,00 €) ===
+        log.info("\n=== 6. I Play Rocky en Salle 2 le 15/10/2026 (tarif de base 8,00 €) ===");
+        var screening4 = cinema.scheduleScreening(2, rocky35mm, day, 8.0);
+        sellTicket(screening4, new StudentTicket());
+        sellTicket(screening4, new StudentTicket());
+        sellTicket(screening4, new StudentTicket());
+        sellTicket(screening4, new StudentTicket());
+        log.info(() -> "Places restantes : " + screening4.getRemainingSeats());
+        log.info(() -> "Taux de remplissage : " + screening4.getOccupancyRate() + " %");
+        startScreening(screening4);
+        screening4.finish();
+        log.info("Séance terminée");
+        log.info(() -> "État de la Salle 2 : " + room2.getState());
+        log.info(() -> "Salles libres : " + cinema.formatAvailableRooms());
+        log.info(() -> "Projections de la copie de « I Play Rocky » : " + rocky35mm.getProjectionCount());
+
+        // === 7. I Play Rocky en Salle 2 le 15/10/2026 (tarif de base 8,00 €) ===
+        log.info("\n=== 7. I Play Rocky en Salle 2 le 15/10/2026 (tarif de base 8,00 €) ===");
+        var screening5 = cinema.scheduleScreening(2, rocky35mm, day, 8.0);
+        startScreening(screening5);
+        room2.finishCleaning();
+        log.info("Nettoyage de la Salle 2 terminé");
+        startScreening(screening5);
     }
 
     private static void sellTicket(Screening screening, Ticket ticket) {
@@ -53,6 +88,15 @@ public class Main {
             log.info(String.format(Locale.FRANCE, "%s vendu : %.2f €", ticket.getLabel(), price));
         } catch (BusinessRuleException e) {
             log.info("Vente refusée : " + e.getMessage());
+        }
+    }
+
+    private static void startScreening(Screening screening) {
+        try {
+            screening.start();
+            log.info("Séance démarrée");
+        } catch (BusinessRuleException e) {
+            log.info("Démarrage refusé : " + e.getMessage());
         }
     }
 }
